@@ -1,0 +1,24 @@
+<rest>
+
+	<interceptors>
+		<interceptor name="property-set" module="compy.rest.interceptor" cls="PropertySetInterceptor"></interceptor>
+		<interceptor name="exception" module="compy.rest.interceptor" cls="ExceptionInterceptor"></interceptor>
+	</interceptors>
+	
+	<interceptor-stacks>
+		<interceptor-stack name="default-stack">
+			<interceptor ref="property-set"></interceptor>
+			<interceptor ref="exception"></interceptor>
+		</interceptor-stack>
+	</interceptor-stacks>
+	
+	<default-interceptor ref="default-stack"></default-interceptor>
+	
+	<actions>
+	
+		<action name="getstorage" url="/storage/${sid}" version="v1" module="nocapi.api.storage" cls="GetStorage">
+		</action>
+
+	</actions>
+
+</rest>
