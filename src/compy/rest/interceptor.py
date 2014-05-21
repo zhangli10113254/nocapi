@@ -5,6 +5,7 @@ Created on 2014-5-15
 '''
 
 from compy.rest.ctx import context
+import os
 
 class Interceptor(object):
     def intercept(self, action_invoker):
@@ -13,7 +14,7 @@ class Interceptor(object):
 class PropertySetInterceptor(Interceptor):
     def intercept(self, action_invoker):
         request = context.request
-        url = request.path_info
+        url = os.path.normpath(request.path_info)
         
         url_stack = url.split('/')[2:]
         config_url_stack = action_invoker.action.get('url').split('/')[1:]

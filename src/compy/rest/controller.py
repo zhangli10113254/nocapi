@@ -9,7 +9,7 @@ from response import JsonResponse, HttpResponse
 from ctx import context
 from compy.utils import ObjectUtils
 
-import web
+import web, os
 
 class DispatchController(object):
     def __init__(self, config_file):
@@ -23,7 +23,7 @@ class DispatchController(object):
         return None
     
     def _url_match(self, url, action):
-        url_split = url.split('/')
+        url_split = os.path.normpath(url).split('/')
         
         # match version
         if url_split[1] != action.get('version'):
