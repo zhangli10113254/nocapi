@@ -5,7 +5,7 @@ Created on 2014-5-15
 '''
 
 from compy.rest.ctx import context
-import os
+import os, json
 
 class Interceptor(object):
     def intercept(self, action_invoker):
@@ -25,7 +25,13 @@ class PropertySetInterceptor(Interceptor):
                 url_property = config_url_stack[index][2:len(config_url_stack[index]) - 1]
                 if hasattr(action_instance, url_property):
                     setattr(action_instance, url_property, url_stack[index])
-               
+            
+        if hasattr(action_instance, 'content') and request.body:
+            try:
+                setattr(action_instance, 'content', json.loads(request.body, 'UTF-8'))
+            except ValueError:
+                setattr(action_instance, 'content', request.body)
+
         return action_invoker.invoke()
     
 class ExceptionInterceptor(Interceptor):

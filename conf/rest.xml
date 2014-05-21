@@ -7,8 +7,8 @@
 	
 	<interceptor-stacks>
 		<interceptor-stack name="default-stack">
-			<interceptor ref="property-set"></interceptor>
 			<interceptor ref="exception"></interceptor>
+			<interceptor ref="property-set"></interceptor>
 		</interceptor-stack>
 	</interceptor-stacks>
 	
@@ -16,7 +16,7 @@
 	
 	<actions>
 	
-		<action name="getstorage" url="/storage/${sid}" version="v1" module="nocapi.api.storage" cls="GetStorage">
+		<action name="getstorage" url="/storage/${sid}" version="v1" method="GET" module="nocapi.api.storage" cls="GetStorage">
 		</action>
 
 	</actions>

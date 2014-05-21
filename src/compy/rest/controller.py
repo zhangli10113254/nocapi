@@ -16,9 +16,9 @@ class DispatchController(object):
         reader = XMLConfigReader(config_file)
         self.actions = reader.read()
         
-    def _match_action(self, path):
+    def _match_action(self, path, method):
         for action in self.actions:
-            if self._url_match(path, action):
+            if method.upper() == action.get('method').upper() and self._url_match(path, action):
                 return action
         return None
     
@@ -52,7 +52,7 @@ class DispatchController(object):
         request = HttpRequest(web.ctx.env)
         context.request = request
         
-        action = self._match_action(request.path_info)
+        action = self._match_action(request.path_info, request.method)
         
         if not action:
             print 'Api not found in path: ' + request.path_info
@@ -91,7 +91,6 @@ class ActionProxy(object):
     def __init__(self, action):
         self.action = action
         self.action_instance = ObjectUtils.initialize(action.get('module'), action.get('clazz'))
-        self.action_method = getattr(self.action_instance, action.get('method'))
     
     def __call__(self):
-        return self.action_method()
+        return self.action_instance()
