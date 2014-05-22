@@ -5,11 +5,16 @@ Created on 2014年4月22日
 
 @author: zhangli
 '''
+import noc_api_config
+import web
+
+# initialize logging
+import logging.config
+logging.config.fileConfig(noc_api_config.LOGGING_CONFIG_FILE)
 
 from compy.rest.controller import DispatchController
-
-import noc_api_config, web
-
+from nocapi import context
+ 
 
 if __name__ == '__main__':
     

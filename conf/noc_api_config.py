@@ -13,6 +13,9 @@ NOC_API_HOME = os.path.abspath(os.path.dirname(__file__))
 # rest config file
 REST_CONFIG_FILE = os.path.join(NOC_API_HOME, 'rest.xml')
 
+# logging config file
+LOGGING_CONFIG_FILE = os.path.join(NOC_API_HOME, 'logger.conf')
+
 # Mysql config
 MYSQL_HOST = '192.168.0.215'
 MYSQL_PORT = 3306
