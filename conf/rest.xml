@@ -14,11 +14,13 @@
 	
 	<default-interceptor ref="default-stack"></default-interceptor>
 	
-	<actions>
+	<actions scan_package='nocapi.api.rest'>
 	
+		<!-- 
 		<action name="getstorage" url="/storage/${sid}" version="v1" method="GET" module="nocapi.api.storage" cls="GetStorage">
 		</action>
-
+		 -->
+		 
 	</actions>
 
 </rest>

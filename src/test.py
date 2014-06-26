@@ -9,7 +9,7 @@ from compy.db.transaction import transaction
 from compy.db.transaction.context import TransactionContext
 from compy.db.transaction.manager import DataSourceTransactionManager
 
-datasource = DefaultDataSource(host = '192.168.0.215', port = 3306, user = 'root', passwd = 'nova', db = 'nova_new')
+datasource = DefaultDataSource(host = '192.168.22.98', port = 3306, user = 'root', passwd = 'nova', db = 'nova')
 tpl = MySQLTemplate(datasource)
 
 transaction_manager = DataSourceTransactionManager(datasource)
@@ -51,5 +51,4 @@ def batch():
     update()
 
 if __name__ == '__main__':
-
     update()

@@ -5,6 +5,26 @@ Created on 2014-5-15
 '''
 from compy.utils import ObjectUtils
 import xml.dom.minidom as minidom
+import os
+
+_SCAN_ACTIONS = []
+
+class request():
+    def __init__(self, clz):
+        if clz.REQUEST_INFO:
+            module = clz.__module__
+            clazz = clz.__name__
+            version = clz.REQUEST_INFO['version']
+            method = clz.REQUEST_INFO['method']
+            url = clz.REQUEST_INFO['url']
+            interceptor_names = list(clz.REQUEST_INFO['imterceptors']) if 'imterceptors' in clz.REQUEST_INFO else []
+            name = clz.REQUEST_INFO['name'] if 'name' in clz.REQUEST_INFO else module + '.' + clazz
+            _SCAN_ACTIONS.append(dict(name = name, url = url, version = version, module = module, clazz = clazz, method = method, interceptor_names = interceptor_names))
+            
+        self.clz = clz
+        
+    def __call__(self, *argv, **kwargv):
+        return self.clz(*argv, **kwargv)
 
 class XMLConfigReader(object):
     def __init__(self, config_file):
@@ -60,13 +80,34 @@ class XMLConfigReader(object):
     
     def read_actions(self, actions_node):
         actions = list()
-        for node in actions_node.getElementsByTagName('action'):
-            name = node.getAttribute('name')
-            url = node.getAttribute('url')
-            version = node.getAttribute('version')
-            module = node.getAttribute('module')
-            clazz = node.getAttribute('cls')
-            method = node.getAttribute('method') if node.hasAttribute('method') else '__call__'
-            interceptor_names = [ref_node.getAttribute('ref') for ref_node in node.getElementsByTagName('interceptor')]
-            actions.append(dict(name = name, url = url, version = version, module = module, clazz = clazz, method = method, interceptor_names = interceptor_names))
+        
+        if actions_node.hasAttribute('scan_package'):
+            def _scan_and_import(scan_package):
+                package_path = os.path.dirname(__import__(scan_package, fromlist = ['']).__file__)
+                for file in os.listdir(package_path):
+                    if file.startswith('__init__'):
+                        continue
+                    
+                    if os.path.isdir(package_path + '/' + file):
+                        _scan_and_import(scan_package + '.' + file)
+                    else:
+                        mod_name = scan_package + '.' + file.split('.')[0]
+                        __import__(mod_name)
+                        
+            scan_package = actions_node.getAttribute('scan_package')
+            _scan_and_import(scan_package)
+            
+            actions =   list(_SCAN_ACTIONS)
+            
+        else:
+            for node in actions_node.getElementsByTagName('action'):
+                name = node.getAttribute('name')
+                url = node.getAttribute('url')
+                version = node.getAttribute('version')
+                module = node.getAttribute('module')
+                clazz = node.getAttribute('cls')
+                method = node.getAttribute('method')
+                interceptor_names = [ref_node.getAttribute('ref') for ref_node in node.getElementsByTagName('interceptor')]
+                actions.append(dict(name = name, url = url, version = version, module = module, clazz = clazz, method = method, interceptor_names = interceptor_names))
+                
         return actions  

@@ -13,8 +13,6 @@ import logging.config
 logging.config.fileConfig(noc_api_config.LOGGING_CONFIG_FILE)
 
 from compy.rest.controller import DispatchController
-from nocapi import context
- 
 
 if __name__ == '__main__':
     
